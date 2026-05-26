@@ -6,6 +6,8 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Từ Gia Thịnh_2124110231</h1>
+    <footer class="bg-dark text-white text-center p-3 admin-footer">
+            Admin Footer
+    </footer>
 </body>
 </html>

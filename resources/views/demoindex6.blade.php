@@ -6,6 +6,8 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Từ Gia Thịnh_2124110231</h1>
+    <h2>Xin chào bạn đến với hệ thống {{ $data }}</h2>
+
+    <h3>Value: {{ $param1 }} - {{ $param2 }}</h3>
 </body>
 </html>
