@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -12,7 +13,19 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $list = DB::table('users')
+            ->select(
+                'userid',
+                'username',
+                'slug',
+                'description',
+                'status'
+            )
+            ->where('status', 1)
+            ->orderBy('username')
+            ->get();
+
+        return view('admin.users.index', compact('list'));
     }
 
     /**
@@ -20,7 +33,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.users.create');
     }
 
     /**
@@ -28,7 +41,14 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        DB::table('users')->insert([
+            'username' => $request->username,
+            'slug' => $request->slug,
+            'description' => $request->description,
+            'status' => 1
+        ]);
+
+        return redirect()->route('admin.users.index');
     }
 
     /**
@@ -60,6 +80,10 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        DB::table('users')
+            ->where('userid', $id)
+            ->delete();
+
+        return redirect()->route('admin.users.index');
     }
 }

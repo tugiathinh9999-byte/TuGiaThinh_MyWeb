@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
@@ -12,15 +13,20 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $list = DB::table('posts')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return view('admin.posts.index', compact('list'));
     }
+
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        //
+        return view('admin.posts.create');
     }
 
     /**
@@ -28,7 +34,14 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        DB::table('posts')->insert([
+            'title' => $request->title,
+            'slug' => $request->slug,
+            'content' => $request->input('content'),
+            'userid' => 1
+        ]);
+
+        return redirect()->route('admin.posts.index');
     }
 
     /**
@@ -60,6 +73,10 @@ class PostController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        DB::table('posts')
+            ->where('id', $id)
+            ->delete();
+
+        return redirect()->route('admin.posts.index');
     }
 }

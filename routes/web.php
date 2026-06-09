@@ -42,6 +42,20 @@ Route::get('/admin/dashboard', function () {
     return view('admin.dashboard');
 })->name('admin.home');
 
+Route::resource('admin/categories', CategoryController::class)
+    ->names('admin.categories');
+
+Route::resource('admin/brands', BrandController::class)
+    ->names('admin.brands');
+
+Route::resource('admin/users', UserController::class)
+    ->names('admin.users');
+
+Route::resource('admin/products', ProductController::class)
+    ->names('admin.products');
+
+Route::resource('admin/posts', PostController::class)
+    ->names('admin.posts');
 //goi test1,2
 Route::get('/test1', [ProductController::class, 'test1']);
 Route::get('/test2', [ProductController::class, 'test2']);

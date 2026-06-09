@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -12,7 +13,17 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $list = DB::table('products')
+            ->join('categories', 'products.cateid', '=', 'categories.cateid')
+            ->leftJoin('brands', 'products.brandid', '=', 'brands.brandid')
+            ->select(
+                'products.*',
+                'categories.catename',
+                'brands.brandname'
+            )
+            ->get();
+
+        return view('admin.products.index', compact('list'));
     }
 
     /**
@@ -20,7 +31,18 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        $categories = DB::table('categories')
+            ->where('status', 1)
+            ->get();
+
+        $brands = DB::table('brands')
+            ->where('status', 1)
+            ->get();
+
+        return view(
+            'admin.products.create',
+            compact('categories', 'brands')
+        );
     }
 
     /**
@@ -28,7 +50,19 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        DB::table('products')->insert([
+            'productname' => $request->productname,
+            'slug' => $request->slug,
+            'price' => $request->price,
+            'pricediscount' => $request->pricediscount,
+            'description' => $request->description,
+            'image' => null,
+            'cateid' => $request->cateid,
+            'brandid' => $request->brandid,
+            'status' => 1
+        ]);
+
+        return redirect()->route('admin.products.index');
     }
 
     /**
@@ -60,7 +94,11 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        DB::table('products')
+            ->where('id', $id)
+            ->delete();
+
+        return redirect()->route('admin.products.index');
     }
     public function test1()
     {
