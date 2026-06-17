@@ -11,6 +11,8 @@ use App\Http\Controllers\Admin\PostController;
 Route::get('/', function () {
     return view('welcome');
 });
+
+//Demo
 Route::get('/demo', [DemoController::class, 'index']);
 Route::get('/demo2', [DemoController::class, 'index2']);
 Route::get('/demo3', [DemoController::class, 'index3']);
@@ -18,6 +20,8 @@ Route::get('/demo4/{id}', [DemoController::class, 'index4']);
 Route::get('/demo5/{id?}', [DemoController::class, 'index5']);
 Route::get('/demo6/{param1}/{param2}', [DemoController::class, 'index6']);
 
+
+//---------------------------------------------------
 Route::prefix('admin')->group(function () {
 
     Route::resource('category', CategoryController::class);
@@ -56,6 +60,7 @@ Route::resource('admin/products', ProductController::class)
 
 Route::resource('admin/posts', PostController::class)
     ->names('admin.posts');
+
 //goi test1,2
 Route::get('/test1', [ProductController::class, 'test1']);
 Route::get('/test2', [ProductController::class, 'test2']);

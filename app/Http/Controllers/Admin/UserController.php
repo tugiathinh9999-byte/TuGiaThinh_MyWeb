@@ -5,25 +5,29 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($limit = 5)
     {
-        $list = DB::table('users')
-            ->select(
-                'userid',
-                'username',
-                'slug',
-                'description',
-                'status'
-            )
-            ->where('status', 1)
+        // $list = DB::table('users')
+        //     ->select(
+        //         'userid',
+        //         'username',
+        //         'slug',
+        //         'description',
+        //         'status'
+        //     )
+        //     ->where('status', 1)
+        //     ->orderBy('username')
+        //     ->get();
+        $list = User::select('userid', 'username', 'slug', 'description', 'status')
             ->orderBy('username')
-            ->get();
+            ->paginate($limit);
 
         return view('admin.users.index', compact('list'));
     }
@@ -41,14 +45,25 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        DB::table('users')->insert([
-            'username' => $request->username,
-            'slug' => $request->slug,
-            'description' => $request->description,
-            'status' => 1
-        ]);
+        try {
 
-        return redirect()->route('admin.users.index');
+            User::create([
+                'username' => $request->username,
+                'slug' => $request->slug,
+                'description' => $request->description,
+                'status' => $request->status
+            ]);
+
+            return redirect()
+                ->route('admin.users.index')
+                ->with('success', 'Thêm thành công');
+
+        } catch (\Exception $e) {
+
+            return back()
+                ->withInput()
+                ->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -64,7 +79,12 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        return view(
+            'admin.users.edit',
+            compact('user')
+        );
     }
 
     /**
@@ -72,7 +92,27 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+
+            $user = User::findOrFail($id);
+
+            $user->update([
+                'username' => $request->username,
+                'slug' => $request->slug,
+                'description' => $request->description,
+                'status' => $request->status
+            ]);
+
+            return redirect()
+                ->route('admin.users.index')
+                ->with('success', 'Cập nhật thành công');
+
+        } catch (\Exception $e) {
+
+            return back()
+                ->withInput()
+                ->with('error', $e->getMessage());
+        }
     }
 
     /**

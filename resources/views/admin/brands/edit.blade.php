@@ -1,10 +1,10 @@
 @extends('admin.layouts.admin')
-@section('title', 'Thêm loại')
+@section('title', 'Sửa thương hiệu')
 
 @section('content')
 <div class="h-screen flex items-center justify-center p-4">
     <div class="w-100">
-        <h3 class="text-xl font-bold mb-4">Thêm loại mới</h3>
+        <h3 class="text-xl font-bold mb-4">Sửa thương hiệu</h3>
 
         @if(session('error'))
             <div class="alert alert-danger mb-3">
@@ -12,20 +12,20 @@
             </div>
         @endif
 
-        <form action="{{ route('admin.categories.store') }}" method="POST"
+        <form action="{{ route('admin.brands.update', $brand->brandid) }}" method="POST"
               class="w-96 space-y-3 max-h-screen overflow-y-auto">
 
             @csrf
+            @method('PUT')
 
             <div class="row">
                 <div class="col-md-12">
-
                     <div class="mb-3">
-                        <label class="form-label">Tên loại</label>
+                        <label class="form-label">Tên thương hiệu</label>
                         <input type="text"
-                               name="catename"
+                               name="brandname"
                                class="form-control"
-                               value="{{ old('catename') }}"
+                               value="{{ old('brandname', $brand->brandname) }}"
                                required>
                     </div>
 
@@ -34,7 +34,7 @@
                         <input type="text"
                                name="slug"
                                class="form-control"
-                               value="{{ old('slug') }}"
+                               value="{{ old('slug', $brand->slug) }}"
                                required>
                     </div>
 
@@ -46,7 +46,7 @@
                                name="status"
                                id="active"
                                value="1"
-                               {{ old('status', 1) == 1 ? 'checked' : '' }}>
+                               {{ old('status', $brand->status) == 1 ? 'checked' : '' }}>
                         <label class="btn btn-outline-success" for="active">
                             Hiển thị
                         </label>
@@ -56,27 +56,26 @@
                                name="status"
                                id="inactive"
                                value="0"
-                               {{ old('status') == 0 ? 'checked' : '' }}>
+                               {{ old('status', $brand->status) == 0 ? 'checked' : '' }}>
                         <label class="btn btn-outline-danger" for="inactive">
                             Ẩn
                         </label>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Mô tả loại</label>
+                        <label class="form-label">Mô tả thương hiệu</label>
                         <textarea name="description"
                                   rows="4"
-                                  class="form-control">{{ old('description') }}</textarea>
+                                  class="form-control">{{ old('description', $brand->description) }}</textarea>
                     </div>
-
                 </div>
             </div>
 
             <button type="submit" class="btn btn-primary">
-                Lưu loại
+                Cập nhật thương hiệu
             </button>
 
-            <a href="{{ route('admin.categories.index') }}"
+            <a href="{{ route('admin.brands.index') }}"
                class="btn btn-secondary">
                 Quay lại
             </a>

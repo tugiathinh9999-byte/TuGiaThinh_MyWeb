@@ -1,67 +1,105 @@
 @extends('admin.layouts.admin')
 
-@section('title', 'Người Dùng')
+@section('title', 'Người dùng')
 
 @section('content')
 
-    <h2 class="mb-3">DANH SÁCH NGƯỜI DÙNG</h2>
+    <div class="container-fluid">
 
-    <a href="{{ route('admin.users.create') }}" class="btn btn-success mb-3">
-        + Thêm mới
-    </a>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>DANH SÁCH NGƯỜI DÙNG</h2>
 
-    <table class="table table-bordered table-hover table-striped">
-        <thead class="table-dark">
-            <tr>
-                <th>STT</th>
-                <th>Hình ảnh</th>
-                <th>Tên người dùng</th>
-                <th>Slug</th>
-                <th>Mô tả</th>
-                <th>Trạng thái</th>
-                <th>Hành động</th>
-            </tr>
-        </thead>
+            <a href="{{ route('admin.users.create') }}" class="btn btn-success">
+                + Thêm mới
+            </a>
+        </div>
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
 
-        <tbody>
-            @foreach($list as $item)
+        <table class="table table-bordered table-hover table-striped align-middle">
+            <thead class="table-dark">
                 <tr>
-                    <td>{{ $item->userid }}</td>
-
-                    <td>
-                        <img src="{{ asset('images/default.png') }}" alt="{{ $item->username }}" class="img-thumbnail"
-                            style="max-width: 100px;">
-                    </td>
-
-                    <td>{{ $item->username }}</td>
-
-                    <td>{{ $item->slug }}</td>
-
-                    <td>{{ $item->description }}</td>
-
-                    <td>
-                        @if($item->status == 1)
-                            <span class="badge bg-success">Hiển thị</span>
-                        @else
-                            <span class="badge bg-danger">Ẩn</span>
-                        @endif
-                    </td>
-
-                    <td>
-                        <form action="{{ route('admin.users.destroy', $item->userid) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-
-                            <button type="submit" class="btn btn-danger">
-                                Xóa
-                            </button>
-                        </form>
-                    </td>
-
+                    <th width="60">STT</th>
+                    <th width="120">Hình ảnh</th>
+                    <th>Tên người dùng</th>
+                    <th>Slug</th>
+                    <th>Mô tả</th>
+                    <th width="120">Trạng thái</th>
+                    <th width="180">Hành động</th>
                 </tr>
-            @endforeach
-        </tbody>
+            </thead>
 
-    </table>
+            <tbody>
+
+                @forelse($list as $item)
+
+                    <tr>
+
+                        <td>
+                            {{ $list->firstItem() + $loop->index }}
+                        </td>
+
+                        <td>
+                            <img src="{{ asset('images/default.png') }}" alt="{{ $item->username }}" class="img-thumbnail"
+                                width="80">
+                        </td>
+
+                        <td>{{ $item->username }}</td>
+
+                        <td>{{ $item->slug }}</td>
+
+                        <td>{{ $item->description }}</td>
+
+                        <td>
+                            @if($item->status == 1)
+                                <span class="badge bg-success">Hiển thị</span>
+                            @else
+                                <span class="badge bg-danger">Ẩn</span>
+                            @endif
+                        </td>
+
+                        <td>
+
+                            <a href="{{ route('admin.users.edit', $item->userid) }}" class="btn btn-warning btn-sm">
+                                Sửa
+                            </a>
+
+                            <form action="{{ route('admin.users.destroy', $item->userid) }}" method="POST" class="d-inline">
+
+                                @csrf
+                                @method('DELETE')
+
+                                <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Bạn có chắc muốn xóa?')">
+                                    Xóa
+                                </button>
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+                @empty
+
+                    <tr>
+                        <td colspan="7" class="text-center">
+                            Không có dữ liệu
+                        </td>
+                    </tr>
+
+                @endforelse
+
+            </tbody>
+
+        </table>
+
+        <div class="d-flex justify-content-center">
+            {{ $list->links() }}
+        </div>
+    </div>
 
 @endsection

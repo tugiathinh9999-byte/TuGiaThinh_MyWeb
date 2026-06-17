@@ -15,6 +15,11 @@
     <a href="{{ route('admin.brands.create') }}" class="btn btn-success mb-3">
         + Thêm mới
     </a>
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
     <table class="table table-bordered table-hover table-striped">
         <thead class="table-dark">
             <tr>
@@ -22,6 +27,7 @@
                 <th>Hình ảnh</th>
                 <th>Tên thương hiệu</th>
                 <th>Slug</th>
+                <th>Mô tả</th>
                 <th>Trạng thái</th>
                 <th>Hành động</th>
             </tr>
@@ -30,11 +36,12 @@
         <tbody>
             @foreach($list as $item)
                 <tr>
-                    <td>{{ $item->brandid }}</td>
+                    <td>{{ $list->firstItem() + $loop->index }}</td>
                     <td><img src="{{ asset('images/default.png') }}" alt="{{ $item->brandname }}" class="img-thumbnail"
                             style="max-width: 100px;"></td>
                     <td>{{ $item->brandname }}</td>
                     <td>{{ $item->slug }}</td>
+                    <td>{{ $item->description }}</td>
                     <td>
                         @if($item->status == 1)
                             <span class="badge bg-success">Hiển thị</span>
@@ -43,6 +50,10 @@
                         @endif
                     </td>
                     <td>
+                        <a href="{{ route('admin.brands.edit', $item->brandid) }}" class="btn btn-warning btn-sm">
+                            Sửa
+                        </a>
+
                         <form action="{{ route('admin.brands.destroy', $item->brandid) }}" method="POST">
 
                             @csrf
@@ -58,5 +69,8 @@
             @endforeach
         </tbody>
     </table>
+    <div class="d-flex justify-content-center">
+        {{ $list->links() }}
+    </div>
 
 @endsection

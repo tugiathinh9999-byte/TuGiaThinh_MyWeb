@@ -5,17 +5,24 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Post;
+use App\Models\User;
 
 class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($limit = 5)
     {
-        $list = DB::table('posts')
-            ->orderBy('id', 'desc')
-            ->get();
+        // $list = DB::table('posts')
+        //     ->orderBy('id', 'desc')
+        //     ->get();
+
+        $list = Post::with(['user:userid,username'])
+            ->select('id', 'title', 'slug', 'content', 'userid', 'status')
+            ->orderBy('title')
+            ->paginate($limit);
 
         return view('admin.posts.index', compact('list'));
     }
@@ -34,14 +41,26 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        DB::table('posts')->insert([
-            'title' => $request->title,
-            'slug' => $request->slug,
-            'content' => $request->input('content'),
-            'userid' => 1
-        ]);
+        try {
 
-        return redirect()->route('admin.posts.index');
+            Post::create([
+                'title' => $request->title,
+                'slug' => $request->slug,
+                'status' => $request->status,
+                'content' => $request->input('content'),
+                'userid' => 1
+            ]);
+
+            return redirect()
+                ->route('admin.posts.index')
+                ->with('success', 'Thêm thành công');
+
+        } catch (\Exception $e) {
+
+            return back()
+                ->withInput()
+                ->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -57,7 +76,14 @@ class PostController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $post = Post::findOrFail($id);
+
+        $users = User::orderBy('username')->get();
+
+        return view(
+            'admin.posts.edit',
+            compact('post', 'users')
+        );
     }
 
     /**
@@ -65,7 +91,28 @@ class PostController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+
+            $post = Post::findOrFail($id);
+
+            $post->update([
+                'title' => $request->title,
+                'slug' => $request->slug,
+                'content' => $request->input('content'),
+                'status' => $request->status,
+                'userid' => 1
+            ]);
+
+            return redirect()
+                ->route('admin.posts.index')
+                ->with('success', 'Cập nhật thành công');
+
+        } catch (\Exception $e) {
+
+            return back()
+                ->withInput()
+                ->with('error', $e->getMessage());
+        }
     }
 
     /**

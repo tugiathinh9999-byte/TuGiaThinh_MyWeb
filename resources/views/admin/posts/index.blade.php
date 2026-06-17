@@ -10,36 +10,47 @@
         + Thêm mới
     </a>
 
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <table class="table table-bordered table-hover table-striped">
         <thead class="table-dark">
             <tr>
-                <th>STT</th>
-                <th>Hình ảnh</th>
+                <th>Mã BV</th>
+                <th>Ảnh</th>
                 <th>Tiêu đề</th>
                 <th>Slug</th>
                 <th>Nội dung</th>
+                <th>Người đăng</th>
                 <th>Trạng thái</th>
-                <th>Tác giả</th>
                 <th>Hành động</th>
             </tr>
         </thead>
 
         <tbody>
-            @foreach($list as $key => $item)
+            @foreach($list as $item)
                 <tr>
-                    <td>{{ $key + 1 }}</td>
+
+                    <td>{{ $list->firstItem() + $loop->index }}</td>
 
                     <td>
                         @if(!empty($item->image))
-                            <img src="{{ asset('images/products/' . $item->image) }}" width="80">
+                            <img src="{{ asset('images/posts/' . $item->image) }}" width="80">
                         @else
                             <img src="{{ asset('images/default.png') }}" width="80">
                         @endif
                     </td>
 
                     <td>{{ $item->title }}</td>
+
                     <td>{{ $item->slug }}</td>
+
                     <td>{{ $item->content }}</td>
+
+                    <td>{{ $item->user?->username }}</td>
 
                     <td>
                         @if($item->status == 1)
@@ -49,23 +60,32 @@
                         @endif
                     </td>
 
-                    <td>{{ $item->userid }}</td>
-
                     <td>
-                        <form action="{{ route('admin.posts.destroy', $item->id) }}" method="POST">
+                        <a href="{{ route('admin.posts.edit', $item->id) }}" class="btn btn-warning btn-sm">
+                            Sửa
+                        </a>
+
+                        <form action="{{ route('admin.posts.destroy', $item->id) }}" method="POST" style="display:inline-block">
 
                             @csrf
                             @method('DELETE')
 
-                            <button type="submit" class="btn btn-danger">
+                            <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Bạn có chắc muốn xóa?')">
                                 Xóa
                             </button>
 
                         </form>
                     </td>
+
                 </tr>
             @endforeach
         </tbody>
+
     </table>
+
+    <div class="d-flex justify-content-center">
+        {{ $list->links() }}
+    </div>
 
 @endsection
