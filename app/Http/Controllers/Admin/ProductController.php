@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Brand;
+use App\Http\Requests\Admin\ProductRequest;
 
 class ProductController extends Controller
 {
@@ -26,7 +27,7 @@ class ProductController extends Controller
         //     )
         //     ->get();
         $list = Product::with(['category:cateid,catename', 'brand:brandid,brandname'])
-            ->select('id', 'productname', 'slug', 'price', 'description', 'cateid', 'brandid', 'status')
+            ->select('id', 'productname', 'slug', 'price', 'pricediscount', 'description', 'cateid', 'brandid', 'status')
             ->orderBy('productname')
             ->paginate($limit);
 
@@ -50,25 +51,24 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
         try {
 
             Product::create([
-                'productname' => $request->productname,
-                'slug' => $request->slug,
-                'cateid' => $request->cateid,
-                'brandid' => $request->brandid,
-                'price' => $request->price,
+                'productname'   => $request->productname,
+                'slug'          => $request->slug,
+                'cateid'        => $request->cateid,
+                'brandid'       => $request->brandid,
+                'price'         => $request->price,
                 'pricediscount' => $request->pricediscount,
-                'description' => $request->description,
-                'status' => $request->status
+                'description'   => $request->description,
+                'status'        => $request->status,
             ]);
 
             return redirect()
                 ->route('admin.products.index')
-                ->with('success', 'Thêm thành công');
-
+                ->with('success', 'Thêm sản phẩm thành công');
         } catch (\Exception $e) {
 
             return back()
@@ -88,7 +88,7 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit(string $id)
     {
         $product = Product::findOrFail($id);
 
@@ -109,10 +109,8 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(
-        Request $request,
-        $id
-    ) {
+    public function update(ProductRequest $request, string $id)
+    {
         try {
 
             $product = Product::findOrFail($id);
@@ -131,7 +129,6 @@ class ProductController extends Controller
             return redirect()
                 ->route('admin.products.index')
                 ->with('success', 'Cập nhật thành công');
-
         } catch (\Exception $e) {
 
             return back()

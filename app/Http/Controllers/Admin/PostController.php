@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\Admin\PostRequest;
 use App\Models\Post;
 use App\Models\User;
 
@@ -39,7 +40,7 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
         try {
 
@@ -54,7 +55,6 @@ class PostController extends Controller
             return redirect()
                 ->route('admin.posts.index')
                 ->with('success', 'Thêm thành công');
-
         } catch (\Exception $e) {
 
             return back()
@@ -89,7 +89,7 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(PostRequest $request, string $id)
     {
         try {
 
@@ -106,7 +106,6 @@ class PostController extends Controller
             return redirect()
                 ->route('admin.posts.index')
                 ->with('success', 'Cập nhật thành công');
-
         } catch (\Exception $e) {
 
             return back()

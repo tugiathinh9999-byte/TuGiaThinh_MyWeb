@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Brand;
+use App\Http\Requests\Admin\BrandRequest;
 
 class BrandController extends Controller
 {
@@ -38,7 +39,7 @@ class BrandController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(BrandRequest $request)
     {
         try {
 
@@ -52,7 +53,6 @@ class BrandController extends Controller
             return redirect()
                 ->route('admin.brands.index')
                 ->with('success', 'Thêm thành công');
-
         } catch (\Exception $e) {
 
             return back()
@@ -72,7 +72,7 @@ class BrandController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit(string $id)
     {
         $brand = Brand::findOrFail($id);
 
@@ -82,10 +82,8 @@ class BrandController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(
-        Request $request,
-        $id
-    ) {
+    public function update(BrandRequest $request, string $id)
+    {
         try {
 
             $brand = Brand::findOrFail($id);
@@ -100,7 +98,6 @@ class BrandController extends Controller
             return redirect()
                 ->route('admin.brands.index')
                 ->with('success', 'Cập nhật thành công');
-
         } catch (\Exception $e) {
 
             return back()

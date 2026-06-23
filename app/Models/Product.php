@@ -14,6 +14,7 @@ class Product extends Model
         'brandid',
         'slug',
         'price',
+        'pricediscount',
         'description',
         'image',
         'status'
@@ -28,5 +29,3 @@ class Product extends Model
         return $this->belongsTo(Brand::class, 'brandid', 'brandid');
     }
 }
-
-

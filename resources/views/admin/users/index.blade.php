@@ -13,11 +13,7 @@
                 + Thêm mới
             </a>
         </div>
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
+        <x-admin.alert />
 
         <table class="table table-bordered table-hover table-striped align-middle">
             <thead class="table-dark">
@@ -35,7 +31,6 @@
             <tbody>
 
                 @forelse($list as $item)
-
                     <tr>
 
                         <td>
@@ -54,7 +49,7 @@
                         <td>{{ $item->description }}</td>
 
                         <td>
-                            @if($item->status == 1)
+                            @if ($item->status == 1)
                                 <span class="badge bg-success">Hiển thị</span>
                             @else
                                 <span class="badge bg-danger">Ẩn</span>
@@ -67,7 +62,8 @@
                                 Sửa
                             </a>
 
-                            <form action="{{ route('admin.users.destroy', $item->userid) }}" method="POST" class="d-inline">
+                            <form action="{{ route('admin.users.destroy', $item->userid) }}" method="POST"
+                                class="d-inline">
 
                                 @csrf
                                 @method('DELETE')
@@ -90,7 +86,6 @@
                             Không có dữ liệu
                         </td>
                     </tr>
-
                 @endforelse
 
             </tbody>

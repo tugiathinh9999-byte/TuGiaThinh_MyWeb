@@ -3,11 +3,7 @@
 @section('content')
     <div class="h-screen flex items-center justify-center p-4">
         <h3 class="text-xl font-bold mb-4">Sửa bài viết</h3>
-        @if(session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
+        <x-admin.alert />
 
         <form action="{{ route('admin.posts.update', $post->id) }}" method="POST"
             class="w-96 space-y-3 max-h-screen overflow-y-auto">
@@ -21,10 +17,20 @@
                         <label class="form-label">Tiêu đề</label>
                         <input type="text" name="title" class="form-control" value="{{ old('title', $post->title) }}"
                             required>
+                            @error('title')
+                                <span class="text-danger">
+                                    {{ $message }}
+                                </span>
+                            @enderror
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Slug</label>
                         <input type="text" name="slug" class="form-control" value="{{ old('slug', $post->slug) }}" required>
+                        @error('slug')
+                            <span class="text-danger">
+                                {{ $message }}
+                            </span>
+                        @enderror
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Tác giả</label>
@@ -36,6 +42,11 @@
                                 </option>
                             @endforeach
                         </select>
+                        @error('userid')
+                            <span class="text-danger">
+                                {{ $message }}
+                            </span>
+                        @enderror
                     </div>
                 </div>
                 
@@ -49,11 +60,22 @@
                         <label class="btn btn-outline-danger" for="inactive">
                             Ẩn
                         </label>
+                        @error('status')
+                            <span class="text-danger">
+                                {{ $message }}
+                            </span>
+                        @enderror
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Nội dung</label>
                         <textarea name="content" rows="8" class="form-control"
                             required>{{ old('content', $post->content) }}</textarea>
+                        @error('content')
+                            <span class="text-danger">
+                                {{ $message }}
+                            </span>
+                        @enderror
+                    </div>
                 </div>
             </div>
 

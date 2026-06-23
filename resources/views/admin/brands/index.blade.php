@@ -15,11 +15,7 @@
     <a href="{{ route('admin.brands.create') }}" class="btn btn-success mb-3">
         + Thêm mới
     </a>
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
+    <x-admin.alert />
     <table class="table table-bordered table-hover table-striped">
         <thead class="table-dark">
             <tr>

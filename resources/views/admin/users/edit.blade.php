@@ -10,11 +10,7 @@
             Sửa người dùng
         </h3>
 
-        @if(session('error'))
-            <div class="alert alert-danger mb-3">
-                {{ session('error') }}
-            </div>
-        @endif
+        <x-admin.alert />
 
         <form action="{{ route('admin.users.update', $user->userid) }}"
               method="POST"
@@ -36,6 +32,11 @@
                                class="form-control"
                                value="{{ old('username', $user->username) }}"
                                required>
+                               @error('username')
+                                <span class="text-danger">
+                                    {{ $message }}
+                                </span>
+                            @enderror
                     </div>
 
                     <div class="mb-3">
@@ -46,6 +47,11 @@
                                name="slug"
                                class="form-control"
                                value="{{ old('slug', $user->slug) }}">
+                            @error('slug')
+                                <span class="text-danger">
+                                    {{ $message }}
+                                </span>
+                            @enderror
                     </div>
 
                 </div>
@@ -72,6 +78,11 @@
                         <label class="btn btn-outline-danger" for="inactive">
                             Ẩn
                         </label>
+                        @error('status')
+                                <span class="text-danger">
+                                    {{ $message }}
+                                </span>
+                            @enderror
                     </div>
 
                     <div class="mb-3">
@@ -82,8 +93,13 @@
                         <textarea name="description"
                                   rows="4"
                                   class="form-control">{{ old('description', $user->description) }}</textarea>
+                        @error('description')
+                            <span class="text-danger">
+                                {{ $message }}
+                            </span>
+                        @enderror
+                    </div>
                 </div>
-            </div>
 
             <button type="submit" class="btn btn-primary">
                 Cập nhật người dùng
